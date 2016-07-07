@@ -22,7 +22,7 @@ public class PasscodeSignButton: UIButton {
     }
     
     @IBInspectable
-    public var borderRadius: CGFloat = 30 {
+    public var borderRadius: CGFloat? {
         didSet {
             setupView()
         }
@@ -50,29 +50,34 @@ public class PasscodeSignButton: UIButton {
         setupActions()
     }
     
-    public override func intrinsicContentSize() -> CGSize {
-        
-        return CGSizeMake(60, 60)
-    }
-    
     private var defaultBackgroundColor = UIColor.clearColor()
     
     private func setupView() {
         
         layer.borderWidth = 1
-        layer.cornerRadius = borderRadius
+        
         layer.borderColor = borderColor.CGColor
         
         if let backgroundColor = backgroundColor {
-            
             defaultBackgroundColor = backgroundColor
+        }
+        
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews();
+        
+        // Used for autolayout.
+        if borderRadius == nil {
+            layer.cornerRadius = self.frame.height/2;
+        } else {
+            layer.cornerRadius = borderRadius!
         }
     }
     
     private func setupActions() {
-        
-        addTarget(self, action: Selector("handleTouchDown"), forControlEvents: .TouchDown)
-        addTarget(self, action: Selector("handleTouchUp"), forControlEvents: [.TouchUpInside, .TouchDragOutside, .TouchCancel])
+        addTarget(self, action: #selector(PasscodeSignButton.handleTouchDown), forControlEvents: .TouchDown)
+        addTarget(self, action: #selector(PasscodeSignButton.handleTouchUp), forControlEvents: [.TouchUpInside, .TouchDragOutside, .TouchCancel])
     }
     
     func handleTouchDown() {

@@ -30,6 +30,8 @@ public class PasscodeLockViewController: UIViewController, PasscodeLockTypeDeleg
     @IBOutlet public weak var titleLabel: UILabel?
     @IBOutlet public weak var descriptionLabel: UILabel?
     @IBOutlet public var placeholders: [PasscodeSignPlaceholderView] = [PasscodeSignPlaceholderView]()
+    @IBOutlet public var placeholderStack: UIStackView?
+    
     @IBOutlet public weak var cancelButton: UIButton?
     @IBOutlet public weak var deleteSignButton: UIButton?
     @IBOutlet public weak var touchIDButton: UIButton?
@@ -182,8 +184,7 @@ public class PasscodeLockViewController: UIViewController, PasscodeLockTypeDeleg
         
         animatePlaceholders(placeholders, toState: .Error)
         
-        placeholdersX?.constant = -40
-        view.layoutIfNeeded()
+        placeholderStack?.transform = CGAffineTransformMakeTranslation(-40, 0);
         
         UIView.animateWithDuration(
             0.5,
@@ -192,9 +193,8 @@ public class PasscodeLockViewController: UIViewController, PasscodeLockTypeDeleg
             initialSpringVelocity: 0,
             options: [],
             animations: {
-                
-                self.placeholdersX?.constant = 0
-                self.view.layoutIfNeeded()
+
+                self.placeholderStack?.transform = CGAffineTransformIdentity;
             },
             completion: { completed in
                 

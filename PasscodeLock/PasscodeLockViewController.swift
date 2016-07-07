@@ -37,10 +37,12 @@ public class PasscodeLockViewController: UIViewController, PasscodeLockTypeDeleg
     @IBOutlet public weak var touchIDButton: UIButton?
     @IBOutlet public weak var placeholdersX: NSLayoutConstraint?
     
+    public var actionCallback: ((worked: Bool, state: LockState?) -> Void)?
     public var successCallback: ((lock: PasscodeLockType) -> Void)?
     public var dismissCompletionCallback: (()->Void)?
     public var notificationCenter: NSNotificationCenter?
     
+    internal var passcodeLockState: LockState?
     internal let passcodeConfiguration: PasscodeLockConfigurationType
     internal let passcodeLock: PasscodeLockType
     internal var isPlaceholdersAnimationCompleted = true
@@ -66,6 +68,7 @@ public class PasscodeLockViewController: UIViewController, PasscodeLockTypeDeleg
     public convenience init(state: LockState, configuration: PasscodeLockConfigurationType) {
         
         self.init(state: state.getState(), configuration: configuration)
+        passcodeLockState = state;
     }
     
     public required init(coder aDecoder: NSCoder) {
@@ -140,6 +143,7 @@ public class PasscodeLockViewController: UIViewController, PasscodeLockTypeDeleg
     
     @IBAction func cancelButtonTap(sender: UIButton) {
         
+        actionCallback?(worked: false, state: self.passcodeLockState)
         dismissPasscodeLock(passcodeLock)
     }
     
@@ -224,6 +228,7 @@ public class PasscodeLockViewController: UIViewController, PasscodeLockTypeDeleg
         
         deleteSignButton?.enabled = true
         animatePlaceholders(placeholders, toState: .Inactive)
+        actionCallback?(worked: true, state: self.passcodeLockState)
         dismissPasscodeLock(lock)
         successCallback?(lock: lock)
     }

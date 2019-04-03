@@ -22,7 +22,7 @@ open class PasscodeSignButton: UIButton {
     }
     
     @IBInspectable
-    open var borderRadius: CGFloat? {
+    open var borderRadius: CGFloat = -1 {
         didSet {
             setupView()
         }
@@ -68,10 +68,10 @@ open class PasscodeSignButton: UIButton {
         super.layoutSubviews();
         
         // Used for autolayout.
-        if borderRadius == nil {
+        if borderRadius < 0 {
             layer.cornerRadius = self.frame.height/2;
         } else {
-            layer.cornerRadius = borderRadius!
+            layer.cornerRadius = borderRadius
         }
     }
     
@@ -80,12 +80,12 @@ open class PasscodeSignButton: UIButton {
         addTarget(self, action: #selector(PasscodeSignButton.handleTouchUp), for: [.touchUpInside, .touchDragOutside, .touchCancel])
     }
     
-    func handleTouchDown() {
+    @objc func handleTouchDown() {
         
         animateBackgroundColor(highlightBackgroundColor)
     }
     
-    func handleTouchUp() {
+    @objc func handleTouchUp() {
         
         animateBackgroundColor(defaultBackgroundColor)
     }
